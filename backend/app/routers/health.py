@@ -2,10 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.audit import record_audit
-from app.core.constants import APPT_FORM_DONE, APPT_PENDING_FORM
 from app.core.database import get_db
 from app.core.deps import get_current_staff, get_current_user
-from app.models import Appointment, ExternalLog, HealthSurvey, User
+from app.models import Appointment, HealthSurvey, User
 from app.schemas import AdminHealthSurveyOut, HealthSurveyIn, HealthSurveyOut
 
 router = APIRouter(prefix="/health-surveys", tags=["健康征询表"])
@@ -36,18 +35,6 @@ def submit_survey(
         confirmed=data.confirmed,
     )
     db.add(survey)
-    if appt.status == APPT_PENDING_FORM:
-        appt.status = APPT_FORM_DONE
-
-    # 模拟无纸化签署服务调用：用"本人确认信息真实有效"代替真实电子签名
-    db.add(
-        ExternalLog(
-            api_type="e_sign",
-            request=f"appointment={appt.code}, confirmed={data.confirmed}",
-            response="模拟签署成功",
-            status="success",
-        )
-    )
     db.commit()
     db.refresh(survey)
     record_audit(db, user, "提交健康征询表", appt.code)

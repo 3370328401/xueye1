@@ -50,6 +50,21 @@ def can_transition(current: str, target: str) -> bool:
     return target in APPOINTMENT_TRANSITIONS.get(current, set())
 
 
+# ---------- 双表 / 电子签署 ----------
+FORM_PERSONAL = "献血者个人信息登记表"
+FORM_HEALTH = "健康征询表"
+DOUBLE_FORM_NAMES = [FORM_PERSONAL, FORM_HEALTH]
+
+SIGN_PENDING = "待签署"
+SIGN_DONE = "已签署"
+
+# ---------- 献血间隔规则（天）----------
+# 全血两次间隔不少于 6 个月；单采成分血间隔不少于 14 天
+DONATE_INTERVAL_DAYS = {
+    "全血": 180,
+    "成分血": 14,
+}
+
 # ---------- 团体申报状态 ----------
 GROUP_STATUSES = ["待受理", "受理中", "受理已完成", "已驳回"]
 

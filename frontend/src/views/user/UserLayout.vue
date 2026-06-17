@@ -15,6 +15,7 @@
           <el-menu-item index="/user/appointment"><el-icon><Calendar /></el-icon>我要预约献血</el-menu-item>
           <el-menu-item index="/user/appointments"><el-icon><List /></el-icon>我的预约</el-menu-item>
           <el-menu-item index="/user/health-survey"><el-icon><Document /></el-icon>健康征询表</el-menu-item>
+          <el-menu-item index="/user/double-form"><el-icon><EditPen /></el-icon>双表签署</el-menu-item>
           <el-menu-item index="/user/feedback"><el-icon><Warning /></el-icon>身体异常反馈</el-menu-item>
           <el-menu-item index="/user/evaluation"><el-icon><Star /></el-icon>献血过程评价</el-menu-item>
         </el-menu>

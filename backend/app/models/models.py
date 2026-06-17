@@ -194,3 +194,19 @@ class Dictionary(Base):
     value: Mapped[str] = mapped_column(String(100))
     sort: Mapped[int] = mapped_column(Integer, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class SignRecord(Base):
+    """双表电子签署记录。"""
+
+    __tablename__ = "sign_records"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    appointment_id: Mapped[int] = mapped_column(ForeignKey("appointments.id"))
+    form_name: Mapped[str] = mapped_column(String(50))
+    status: Mapped[str] = mapped_column(String(20), default="已签署")
+    sign_no: Mapped[str] = mapped_column(String(40), default="")  # 模拟签署流水号
+    content: Mapped[str] = mapped_column(Text, default="")  # 表单内容快照(JSON)
+    signed_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+    verified: Mapped[bool] = mapped_column(Boolean, default=False)  # 现场审验

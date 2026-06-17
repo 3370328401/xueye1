@@ -1,5 +1,5 @@
 import random
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -7,8 +7,10 @@ from sqlalchemy.orm import Session
 from app.core.audit import record_audit
 from app.core.constants import (
     APPOINTMENT_STATUSES,
+    APPT_COLLECTED,
     APPT_PENDING_FORM,
     APPT_VOID,
+    DONATE_INTERVAL_DAYS,
     ROLE_ADMIN,
     can_transition,
 )
@@ -29,12 +31,51 @@ def gen_code() -> str:
     return "YY" + datetime.now().strftime("%Y%m%d%H%M%S") + str(random.randint(10, 99))
 
 
+def _parse_date(value: str) -> date | None:
+    try:
+        return date.fromisoformat(value[:10])
+    except ValueError:
+        return None
+
+
+def check_donation_interval(db: Session, user: User, data: AppointmentIn) -> None:
+    """校验献血间隔：与最近一次已完成献血的间隔需满足规定。"""
+    interval = DONATE_INTERVAL_DAYS.get(data.blood_type)
+    if not interval:
+        return
+    last = (
+        db.query(Appointment)
+        .filter(
+            Appointment.user_id == user.id,
+            Appointment.status == APPT_COLLECTED,
+        )
+        .order_by(Appointment.appoint_date.desc())
+        .first()
+    )
+    if not last:
+        return
+    last_date = _parse_date(last.appoint_date)
+    new_date = _parse_date(data.appoint_date)
+    if not last_date or not new_date:
+        return
+    earliest = last_date + timedelta(days=interval)
+    if new_date < earliest:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"距上次献血未满献血间隔（{data.blood_type}需间隔 {interval} 天），"
+                f"最早可于 {earliest.isoformat()} 再次预约"
+            ),
+        )
+
+
 @router.post("", response_model=AppointmentOut)
 def create_appointment(
     data: AppointmentIn,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    check_donation_interval(db, user, data)
     appt = Appointment(
         code=gen_code(),
         user_id=user.id,

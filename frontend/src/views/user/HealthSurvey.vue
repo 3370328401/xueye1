@@ -66,7 +66,7 @@ const form = reactive({
 
 onMounted(async () => {
   const all = await api.get('/appointments/mine')
-  appointments.value = all.filter((a) => !['已取消', '作废'].includes(a.status))
+  appointments.value = all.filter((a) => a.status === '待填双表及签字确认')
 })
 
 async function submit() {
@@ -75,7 +75,7 @@ async function submit() {
   loading.value = true
   try {
     await api.post('/health-surveys', { ...form })
-    ElMessage.success('提交成功，预约状态已更新为"已填写健康征询表"')
+    ElMessage.success('健康征询表已提交，请前往「双表签署」完成电子签署')
   } finally {
     loading.value = false
   }

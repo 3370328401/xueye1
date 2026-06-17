@@ -38,15 +38,23 @@
         <el-table-column label="状态" width="150">
           <template #default="{ row }"><el-tag :type="statusType(row.status)">{{ row.status }}</el-tag></template>
         </el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column label="操作" width="320">
           <template #default="{ row }">
             <el-select
               :model-value="row.status"
               size="small"
+              style="width: 160px"
               @change="(val) => updateStatus(row, val)"
             >
               <el-option v-for="s in statuses" :key="s" :label="s" :value="s" />
             </el-select>
+            <el-button
+              v-if="row.status === '双表已填且确认'"
+              size="small"
+              type="success"
+              style="margin-left: 8px"
+              @click="verify(row)"
+            >双表审验</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -87,6 +95,12 @@ function reset() {
 async function updateStatus(row, val) {
   await api.put(`/appointments/admin/${row.id}/status`, { status: val })
   ElMessage.success('状态已更新')
+  load()
+}
+
+async function verify(row) {
+  await api.post(`/double-forms/admin/verify/${row.id}`)
+  ElMessage.success('双表审验通过，预约进入待现场采血')
   load()
 }
 

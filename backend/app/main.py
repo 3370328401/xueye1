@@ -12,6 +12,7 @@ from app.routers import (
     common,
     dict as dict_router,
     donor,
+    double_form,
     evaluation,
     external,
     feedback,
@@ -68,6 +69,7 @@ app.include_router(stats.router, prefix=api)
 app.include_router(external.router, prefix=api)
 app.include_router(dict_router.router, prefix=api)
 app.include_router(audit.router, prefix=api)
+app.include_router(double_form.router, prefix=api)
 
 
 @app.get("/")

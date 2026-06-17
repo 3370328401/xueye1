@@ -9,6 +9,7 @@ from app.models.models import (
     HealthSurvey,
     Location,
     DonorInfo,
+    SignRecord,
     User,
 )
 
@@ -24,4 +25,5 @@ __all__ = [
     "ExternalLog",
     "AuditLog",
     "Dictionary",
+    "SignRecord",
 ]

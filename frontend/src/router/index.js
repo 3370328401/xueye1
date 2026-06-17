@@ -25,6 +25,7 @@ const routes = [
       { path: 'appointment', name: 'user-appointment', component: () => import('../views/user/AppointmentCreate.vue') },
       { path: 'appointments', name: 'user-appointments', component: () => import('../views/user/MyAppointments.vue') },
       { path: 'health-survey', name: 'user-health', component: () => import('../views/user/HealthSurvey.vue') },
+      { path: 'double-form', name: 'user-double-form', component: () => import('../views/user/DoubleForm.vue') },
       { path: 'feedback', name: 'user-feedback', component: () => import('../views/user/Feedback.vue') },
       { path: 'evaluation', name: 'user-evaluation', component: () => import('../views/user/Evaluation.vue') },
     ],

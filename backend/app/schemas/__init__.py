@@ -283,6 +283,30 @@ class DictOut(BaseModel):
     is_active: bool
 
 
+# ---------- 双表 / 电子签署 ----------
+class SignIn(BaseModel):
+    appointment_id: int
+    confirmed: bool = True
+    signature: str = ""  # 模拟手写签名/确认串
+
+
+class SignRecordOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    user_id: int
+    appointment_id: int
+    form_name: str
+    status: str
+    sign_no: str
+    content: str
+    signed_at: datetime
+    verified: bool
+    appointment_code: str = ""
+    user_name: str = ""
+    user_phone: str = ""
+
+
 # ---------- Audit log ----------
 class AuditLogOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
