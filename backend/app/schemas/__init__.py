@@ -15,6 +15,15 @@ class LoginIn(BaseModel):
     password: str
 
 
+class CodeLoginIn(BaseModel):
+    phone: str
+    code: str
+
+
+class WechatLoginIn(BaseModel):
+    openid: str = ""
+
+
 class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -251,4 +260,38 @@ class ExternalLogOut(BaseModel):
     request: str
     response: str
     status: str
+    created_at: datetime
+
+
+# ---------- Dictionary ----------
+class DictIn(BaseModel):
+    category: str
+    label: str
+    value: str = ""
+    sort: int = 0
+    is_active: bool = True
+
+
+class DictOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    category: str
+    label: str
+    value: str
+    sort: int
+    is_active: bool
+
+
+# ---------- Audit log ----------
+class AuditLogOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    user_id: int | None
+    user_name: str
+    role: str
+    action: str
+    target: str
+    detail: str
     created_at: datetime

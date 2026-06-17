@@ -9,10 +9,21 @@ from datetime import date, datetime, timedelta
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.constants import (
+    APPT_COLLECTED,
+    APPT_FORM_DONE,
+    APPT_PENDING_FORM,
+    DICT_DEFAULTS,
+    ROLE_ADMIN,
+    ROLE_COLLECTOR,
+    ROLE_RECRUITER,
+    ROLE_DONOR,
+)
 from app.core.database import Base, SessionLocal, engine
 from app.core.security import hash_password
 from app.models import (
     Appointment,
+    Dictionary,
     DonorInfo,
     Evaluation,
     Feedback,
@@ -31,11 +42,45 @@ def ensure_admin(db: Session):
             name=settings.admin_name,
             phone=settings.admin_phone,
             password=hash_password(settings.admin_password),
-            role="admin",
+            role=ROLE_ADMIN,
+            dept="信息科",
         )
         db.add(admin)
         db.commit()
     return admin
+
+
+def seed_staff(db: Session):
+    """预置招募科 / 体采科工作人员账号。"""
+    staff = [
+        ("招募科-张干事", "recruiter", ROLE_RECRUITER, "招募科"),
+        ("体采科-李干事", "collector", ROLE_COLLECTOR, "体采科"),
+    ]
+    for name, phone, role, dept in staff:
+        if not db.query(User).filter(User.phone == phone).first():
+            db.add(
+                User(
+                    name=name,
+                    phone=phone,
+                    password=hash_password("123456"),
+                    role=role,
+                    dept=dept,
+                )
+            )
+    db.commit()
+
+
+def seed_dicts(db: Session):
+    if db.query(Dictionary).count() > 0:
+        return
+    for category, labels in DICT_DEFAULTS.items():
+        for sort, label in enumerate(labels):
+            db.add(
+                Dictionary(
+                    category=category, label=label, value=label, sort=sort
+                )
+            )
+    db.commit()
 
 
 def seed_locations(db: Session):
@@ -58,13 +103,13 @@ def seed_demo_users(db: Session):
         name="张三",
         phone="13800000001",
         password=hash_password("123456"),
-        role="user",
+        role=ROLE_DONOR,
     )
     user2 = User(
         name="李四",
         phone="13800000002",
         password=hash_password("123456"),
-        role="user",
+        role=ROLE_DONOR,
     )
     db.add_all([user1, user2])
     db.commit()
@@ -110,7 +155,7 @@ def seed_demo_users(db: Session):
             appoint_date=today.isoformat(),
             time_slot="09:00-10:00",
             location="市中心血站",
-            status="已完成现场采血",
+            status=APPT_COLLECTED,
             remark="首次献血",
         ),
         Appointment(
@@ -120,7 +165,7 @@ def seed_demo_users(db: Session):
             appoint_date=(today + timedelta(days=2)).isoformat(),
             time_slot="14:00-15:00",
             location="高新区献血屋",
-            status="待填写健康征询表",
+            status=APPT_PENDING_FORM,
         ),
         Appointment(
             code=gen_code(),
@@ -129,7 +174,7 @@ def seed_demo_users(db: Session):
             appoint_date=(today - timedelta(days=1)).isoformat(),
             time_slot="10:00-11:00",
             location="市中心血站",
-            status="已填写健康征询表",
+            status=APPT_FORM_DONE,
         ),
         Appointment(
             code=gen_code(),
@@ -138,7 +183,7 @@ def seed_demo_users(db: Session):
             appoint_date=(today - timedelta(days=3)).isoformat(),
             time_slot="15:00-16:00",
             location="大学城流动采血车",
-            status="已完成现场采血",
+            status=APPT_COLLECTED,
         ),
     ]
     db.add_all(appts)
@@ -231,11 +276,14 @@ def run():
     db = SessionLocal()
     try:
         ensure_admin(db)
+        seed_staff(db)
+        seed_dicts(db)
         seed_locations(db)
         seed_demo_users(db)
         seed_groups(db)
         print("演示数据初始化完成。")
         print(f"管理员账号: {settings.admin_phone} / {settings.admin_password}")
+        print("工作人员: recruiter / 123456 (招募科) , collector / 123456 (体采科)")
         print("测试用户: 13800000001 / 123456 , 13800000002 / 123456")
     finally:
         db.close()

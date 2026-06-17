@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.deps import get_current_admin, get_current_user
+from app.core.deps import get_current_staff, get_current_user
 from app.models import Appointment, Evaluation, User
 from app.schemas import AdminEvaluationOut, EvaluationIn, EvaluationOut
 
@@ -48,7 +48,7 @@ def my_evaluations(
 
 
 @router.get("/admin/list", response_model=list[AdminEvaluationOut])
-def admin_list(_: User = Depends(get_current_admin), db: Session = Depends(get_db)):
+def admin_list(_: User = Depends(get_current_staff), db: Session = Depends(get_db)):
     rows = db.query(Evaluation).order_by(Evaluation.created_at.desc()).all()
     result = []
     for ev in rows:

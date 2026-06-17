@@ -6,7 +6,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.deps import get_current_admin
+from app.core.deps import get_current_staff
 from app.models import (
     Appointment,
     Evaluation,
@@ -19,7 +19,7 @@ router = APIRouter(prefix="/stats", tags=["统计"])
 
 
 @router.get("/cards")
-def stat_cards(_: User = Depends(get_current_admin), db: Session = Depends(get_db)):
+def stat_cards(_: User = Depends(get_current_staff), db: Session = Depends(get_db)):
     total_users = db.query(User).filter(User.role == "user").count()
     total_appointments = db.query(Appointment).count()
     today_str = date.today().isoformat()
@@ -49,7 +49,7 @@ def stat_cards(_: User = Depends(get_current_admin), db: Session = Depends(get_d
 
 @router.get("/appointment-status")
 def appointment_status(
-    _: User = Depends(get_current_admin), db: Session = Depends(get_db)
+    _: User = Depends(get_current_staff), db: Session = Depends(get_db)
 ):
     rows = db.query(Appointment.status).all()
     counter = Counter(r[0] for r in rows)
@@ -57,7 +57,7 @@ def appointment_status(
 
 
 @router.get("/daily-trend")
-def daily_trend(_: User = Depends(get_current_admin), db: Session = Depends(get_db)):
+def daily_trend(_: User = Depends(get_current_staff), db: Session = Depends(get_db)):
     rows = db.query(Appointment.appoint_date).all()
     counter = Counter(r[0] for r in rows)
     items = sorted(counter.items())
@@ -69,7 +69,7 @@ def daily_trend(_: User = Depends(get_current_admin), db: Session = Depends(get_
 
 @router.get("/blood-type")
 def blood_type_stats(
-    _: User = Depends(get_current_admin), db: Session = Depends(get_db)
+    _: User = Depends(get_current_staff), db: Session = Depends(get_db)
 ):
     rows = db.query(Appointment.blood_type).all()
     counter = Counter(r[0] for r in rows)
@@ -78,7 +78,7 @@ def blood_type_stats(
 
 @router.get("/feedback-status")
 def feedback_status(
-    _: User = Depends(get_current_admin), db: Session = Depends(get_db)
+    _: User = Depends(get_current_staff), db: Session = Depends(get_db)
 ):
     rows = db.query(Feedback.status).all()
     counter = Counter(r[0] for r in rows)

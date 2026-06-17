@@ -36,7 +36,7 @@
         <el-table-column prop="time_slot" label="时间段" width="120" />
         <el-table-column prop="location" label="地点" />
         <el-table-column label="状态" width="150">
-          <template #default="{ row }"><el-tag>{{ row.status }}</el-tag></template>
+          <template #default="{ row }"><el-tag :type="statusType(row.status)">{{ row.status }}</el-tag></template>
         </el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="{ row }">
@@ -58,16 +58,10 @@
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import api from '../../api'
+import { APPOINTMENT_STATUSES, appointmentStatusType } from '../../constants'
 
-const statuses = [
-  '待填写健康征询表',
-  '已填写健康征询表',
-  '待现场采血',
-  '正在现场采血',
-  '已完成现场采血',
-  '已取消',
-  '作废',
-]
+const statuses = APPOINTMENT_STATUSES
+const statusType = appointmentStatusType
 const filters = reactive({ name: '', phone: '', appoint_date: '', blood_type: '', status: '' })
 const list = ref([])
 const loading = ref(false)

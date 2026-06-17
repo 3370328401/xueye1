@@ -1,5 +1,7 @@
 from app.models.models import (
     Appointment,
+    AuditLog,
+    Dictionary,
     Evaluation,
     ExternalLog,
     Feedback,
@@ -20,4 +22,6 @@ __all__ = [
     "Evaluation",
     "Location",
     "ExternalLog",
+    "AuditLog",
+    "Dictionary",
 ]

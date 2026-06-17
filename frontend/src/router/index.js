@@ -37,7 +37,7 @@ const routes = [
   {
     path: '/admin',
     component: () => import('../views/admin/AdminLayout.vue'),
-    meta: { requiresAuth: true, role: 'admin' },
+    meta: { requiresAuth: true, staff: true },
     children: [
       { path: '', redirect: '/admin/dashboard' },
       { path: 'dashboard', name: 'admin-dashboard', component: () => import('../views/admin/Dashboard.vue') },
@@ -56,15 +56,20 @@ const router = createRouter({
   routes,
 })
 
+const STAFF_ROLES = ['recruiter', 'collector', 'admin']
+
 router.beforeEach((to) => {
   const token = localStorage.getItem('token')
   const role = localStorage.getItem('role')
   if (to.meta.requiresAuth) {
     if (!token) {
-      return to.meta.role === 'admin' ? '/admin/login' : '/login'
+      return to.meta.staff ? '/admin/login' : '/login'
+    }
+    if (to.meta.staff && !STAFF_ROLES.includes(role)) {
+      return '/user/center'
     }
     if (to.meta.role && role !== to.meta.role) {
-      return role === 'admin' ? '/admin/dashboard' : '/user/center'
+      return STAFF_ROLES.includes(role) ? '/admin/dashboard' : '/user/center'
     }
   }
   return true

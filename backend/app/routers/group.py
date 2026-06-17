@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.deps import get_current_admin
+from app.core.deps import get_current_staff
 from app.models import GroupApplication, User
 from app.schemas import GroupApplicationIn, GroupApplicationOut, GroupStatusIn
 
@@ -41,7 +41,7 @@ def query_by_phone(phone: str = Query(...), db: Session = Depends(get_db)):
 
 
 @router.get("/admin/list", response_model=list[GroupApplicationOut])
-def admin_list(_: User = Depends(get_current_admin), db: Session = Depends(get_db)):
+def admin_list(_: User = Depends(get_current_staff), db: Session = Depends(get_db)):
     return (
         db.query(GroupApplication)
         .order_by(GroupApplication.created_at.desc())
@@ -53,7 +53,7 @@ def admin_list(_: User = Depends(get_current_admin), db: Session = Depends(get_d
 def admin_update_status(
     app_id: int,
     data: GroupStatusIn,
-    _: User = Depends(get_current_admin),
+    _: User = Depends(get_current_staff),
     db: Session = Depends(get_db),
 ):
     if data.status not in GROUP_STATUSES:

@@ -20,7 +20,7 @@
             <el-button
               size="small"
               type="danger"
-              :disabled="['已取消', '作废', '已完成现场采血'].includes(row.status)"
+              :disabled="['作废', '已完成现场采血', '正在现场采血'].includes(row.status)"
               @click="cancel(row)"
             >取消</el-button>
           </template>
@@ -47,22 +47,14 @@
 import { onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '../../api'
+import { appointmentStatusType } from '../../constants'
 
 const list = ref([])
 const loading = ref(false)
 const dialog = ref(false)
 const current = ref(null)
 
-const statusMap = {
-  待填写健康征询表: 'warning',
-  已填写健康征询表: 'info',
-  待现场采血: 'info',
-  正在现场采血: 'primary',
-  已完成现场采血: 'success',
-  已取消: 'danger',
-  作废: 'danger',
-}
-const statusType = (s) => statusMap[s] || 'info'
+const statusType = appointmentStatusType
 
 async function load() {
   loading.value = true

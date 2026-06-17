@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.deps import get_current_admin
+from app.core.deps import get_current_staff
 from app.models import ExternalLog, User
 from app.schemas import ExternalLogOut
 
@@ -85,7 +85,7 @@ def recruit_call(data: ExternalRequest, db: Session = Depends(get_db)):
 
 
 @router.get("/logs", response_model=list[ExternalLogOut])
-def list_logs(_: User = Depends(get_current_admin), db: Session = Depends(get_db)):
+def list_logs(_: User = Depends(get_current_staff), db: Session = Depends(get_db)):
     return (
         db.query(ExternalLog)
         .order_by(ExternalLog.created_at.desc())

@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.core.audit import record_audit
+from app.core.constants import APPT_FORM_DONE, APPT_PENDING_FORM
 from app.core.database import get_db
-from app.core.deps import get_current_admin, get_current_user
+from app.core.deps import get_current_staff, get_current_user
 from app.models import Appointment, ExternalLog, HealthSurvey, User
 from app.schemas import AdminHealthSurveyOut, HealthSurveyIn, HealthSurveyOut
 
@@ -34,8 +36,8 @@ def submit_survey(
         confirmed=data.confirmed,
     )
     db.add(survey)
-    if appt.status == "待填写健康征询表":
-        appt.status = "已填写健康征询表"
+    if appt.status == APPT_PENDING_FORM:
+        appt.status = APPT_FORM_DONE
 
     # 模拟无纸化签署服务调用：用"本人确认信息真实有效"代替真实电子签名
     db.add(
@@ -48,6 +50,7 @@ def submit_survey(
     )
     db.commit()
     db.refresh(survey)
+    record_audit(db, user, "提交健康征询表", appt.code)
     return survey
 
 
@@ -62,7 +65,7 @@ def my_surveys(user: User = Depends(get_current_user), db: Session = Depends(get
 
 
 @router.get("/admin/list", response_model=list[AdminHealthSurveyOut])
-def admin_list(_: User = Depends(get_current_admin), db: Session = Depends(get_db)):
+def admin_list(_: User = Depends(get_current_staff), db: Session = Depends(get_db)):
     rows = db.query(HealthSurvey).order_by(HealthSurvey.created_at.desc()).all()
     result = []
     for s in rows:
@@ -78,7 +81,7 @@ def admin_list(_: User = Depends(get_current_admin), db: Session = Depends(get_d
 
 @router.get("/admin/{survey_id}", response_model=AdminHealthSurveyOut)
 def admin_detail(
-    survey_id: int, _: User = Depends(get_current_admin), db: Session = Depends(get_db)
+    survey_id: int, _: User = Depends(get_current_staff), db: Session = Depends(get_db)
 ):
     s = db.get(HealthSurvey, survey_id)
     if not s:

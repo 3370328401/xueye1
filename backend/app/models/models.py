@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.constants import APPT_PENDING_FORM, ROLE_DONOR
 from app.core.database import Base
 
 
@@ -17,7 +18,10 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(50))
     phone: Mapped[str] = mapped_column(String(20), unique=True, index=True)
     password: Mapped[str] = mapped_column(String(255))
-    role: Mapped[str] = mapped_column(String(20), default="user")  # user | admin
+    # user | group_contact | recruiter | collector | admin
+    role: Mapped[str] = mapped_column(String(20), default=ROLE_DONOR)
+    dept: Mapped[str] = mapped_column(String(50), default="")  # 工作人员所属科室
+    openid: Mapped[str] = mapped_column(String(64), default="")  # 微信 openid（模拟）
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
 
@@ -60,7 +64,7 @@ class Appointment(Base):
     appoint_date: Mapped[str] = mapped_column(String(20))
     time_slot: Mapped[str] = mapped_column(String(30))
     location: Mapped[str] = mapped_column(String(100))
-    status: Mapped[str] = mapped_column(String(30), default="待填写健康征询表")
+    status: Mapped[str] = mapped_column(String(30), default=APPT_PENDING_FORM)
     remark: Mapped[str] = mapped_column(String(255), default="")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
     updated_at: Mapped[datetime] = mapped_column(
@@ -160,3 +164,33 @@ class ExternalLog(Base):
     response: Mapped[str] = mapped_column(Text, default="")
     status: Mapped[str] = mapped_column(String(20), default="success")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class AuditLog(Base):
+    """操作日志审计表。"""
+
+    __tablename__ = "audit_logs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"), nullable=True
+    )
+    user_name: Mapped[str] = mapped_column(String(50), default="")
+    role: Mapped[str] = mapped_column(String(20), default="")
+    action: Mapped[str] = mapped_column(String(50))  # 操作类型
+    target: Mapped[str] = mapped_column(String(100), default="")  # 操作对象
+    detail: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class Dictionary(Base):
+    """选项字典表。"""
+
+    __tablename__ = "dictionaries"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    category: Mapped[str] = mapped_column(String(50), index=True)
+    label: Mapped[str] = mapped_column(String(100))
+    value: Mapped[str] = mapped_column(String(100))
+    sort: Mapped[int] = mapped_column(Integer, default=0)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)

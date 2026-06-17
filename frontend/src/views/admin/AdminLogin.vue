@@ -13,7 +13,7 @@
       </el-form>
       <div class="links">
         <router-link to="/">返回首页</router-link>
-        <span class="text-muted">默认账号 admin / admin123</span>
+        <span class="text-muted">admin/admin123 · recruiter/123456 · collector/123456</span>
       </div>
     </el-card>
   </div>
@@ -35,8 +35,8 @@ async function submit() {
   loading.value = true
   try {
     await auth.login({ ...form })
-    if (!auth.isAdmin) {
-      ElMessage.error('该账号不是管理员')
+    if (!auth.isStaff) {
+      ElMessage.error('该账号不是后台工作人员')
       auth.logout()
       return
     }

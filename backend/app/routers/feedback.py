@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.deps import get_current_admin, get_current_user
+from app.core.deps import get_current_staff, get_current_user
 from app.models import Appointment, Feedback, User
 from app.schemas import AdminFeedbackOut, FeedbackIn, FeedbackOut, FeedbackStatusIn
 
@@ -47,7 +47,7 @@ def my_feedbacks(user: User = Depends(get_current_user), db: Session = Depends(g
 
 
 @router.get("/admin/list", response_model=list[AdminFeedbackOut])
-def admin_list(_: User = Depends(get_current_admin), db: Session = Depends(get_db)):
+def admin_list(_: User = Depends(get_current_staff), db: Session = Depends(get_db)):
     rows = db.query(Feedback).order_by(Feedback.created_at.desc()).all()
     result = []
     for fb in rows:
@@ -65,7 +65,7 @@ def admin_list(_: User = Depends(get_current_admin), db: Session = Depends(get_d
 def admin_update_status(
     feedback_id: int,
     data: FeedbackStatusIn,
-    _: User = Depends(get_current_admin),
+    _: User = Depends(get_current_staff),
     db: Session = Depends(get_db),
 ):
     if data.status not in FEEDBACK_STATUSES:

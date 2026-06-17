@@ -7,8 +7,10 @@ from app.core.config import settings
 from app.core.database import Base, SessionLocal, engine
 from app.routers import (
     appointment,
+    audit,
     auth,
     common,
+    dict as dict_router,
     donor,
     evaluation,
     external,
@@ -17,7 +19,14 @@ from app.routers import (
     health,
     stats,
 )
-from app.seed import ensure_admin, seed_groups, seed_locations
+from app.seed import (
+    ensure_admin,
+    seed_demo_users,
+    seed_dicts,
+    seed_groups,
+    seed_locations,
+    seed_staff,
+)
 
 
 @asynccontextmanager
@@ -26,7 +35,10 @@ async def lifespan(app: FastAPI):
     db = SessionLocal()
     try:
         ensure_admin(db)
+        seed_staff(db)
+        seed_dicts(db)
         seed_locations(db)
+        seed_demo_users(db)
         seed_groups(db)
     finally:
         db.close()
@@ -54,6 +66,8 @@ app.include_router(feedback.router, prefix=api)
 app.include_router(evaluation.router, prefix=api)
 app.include_router(stats.router, prefix=api)
 app.include_router(external.router, prefix=api)
+app.include_router(dict_router.router, prefix=api)
+app.include_router(audit.router, prefix=api)
 
 
 @app.get("/")
