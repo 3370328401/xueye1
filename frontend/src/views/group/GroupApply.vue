@@ -7,6 +7,11 @@
           <el-form-item label="单位名称" prop="unit_name"><el-input v-model="form.unit_name" /></el-form-item>
           <el-form-item label="统一社会信用代码"><el-input v-model="form.credit_code" /></el-form-item>
           <el-form-item label="单位地址"><el-input v-model="form.unit_address" /></el-form-item>
+          <el-form-item label="单位类型">
+            <el-select v-model="form.unit_type" style="width: 200px">
+              <el-option v-for="t in unitTypes" :key="t" :label="t" :value="t" />
+            </el-select>
+          </el-form-item>
           <el-form-item label="联系人姓名" prop="contact_name"><el-input v-model="form.contact_name" /></el-form-item>
           <el-form-item label="联系人手机号" prop="contact_phone"><el-input v-model="form.contact_phone" /></el-form-item>
           <el-form-item label="预计献血人数">
@@ -33,10 +38,12 @@ import api from '../../api'
 
 const formRef = ref()
 const loading = ref(false)
+const unitTypes = ['学校', '政府', '军队', '企业', '其他']
 const form = reactive({
   unit_name: '',
   credit_code: '',
   unit_address: '',
+  unit_type: '其他',
   contact_name: '',
   contact_phone: '',
   expected_count: 0,

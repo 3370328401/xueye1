@@ -141,6 +141,7 @@ class GroupApplicationIn(BaseModel):
     unit_address: str = ""
     contact_name: str
     contact_phone: str
+    unit_type: str = "其他"
     expected_count: int = 0
     expected_date: str = ""
     remark: str = ""
@@ -160,12 +161,109 @@ class GroupApplicationOut(BaseModel):
     unit_address: str
     contact_name: str
     contact_phone: str
+    unit_type: str
     expected_count: int
     expected_date: str
     status: str
     admin_remark: str
     created_at: datetime
     updated_at: datetime
+
+
+# ---------- Group activity ----------
+class GroupActivityIn(BaseModel):
+    application_id: int | None = None
+    unit_name: str
+    unit_type: str = "其他"
+    contact_name: str = ""
+    contact_phone: str = ""
+    center_contact: str = ""
+    activity_date: str = ""
+    location: str = ""
+    expected_count: int = 0
+    remark: str = ""
+
+
+class GroupActivityUpdate(BaseModel):
+    actual_date: str = ""
+    actual_count: int = 0
+    center_contact: str = ""
+    remark: str = ""
+
+
+class GroupActivityOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    flow_no: str
+    application_id: int | None
+    unit_name: str
+    unit_type: str
+    contact_name: str
+    contact_phone: str
+    center_contact: str
+    activity_date: str
+    actual_date: str
+    location: str
+    expected_count: int
+    actual_count: int
+    year: int
+    poster_id: int | None
+    remark: str
+    created_at: datetime
+
+
+# ---------- Poster ----------
+class PosterTemplateIn(BaseModel):
+    name: str
+    bg_color: str = "#c62828"
+    title_style: str = "default"
+    contact: str = ""
+    qrcode_text: str = ""
+    is_active: bool = True
+
+
+class PosterTemplateOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    bg_color: str
+    title_style: str
+    contact: str
+    qrcode_text: str
+    is_active: bool
+    created_at: datetime
+
+
+class PosterIn(BaseModel):
+    template_id: int | None = None
+    unit_name: str
+    contact_phone: str = ""
+    title: str = "无偿献血，从我做起"
+    activity_date: str = ""
+    location: str = ""
+    bg_color: str = "#c62828"
+    contact: str = ""
+    qrcode_text: str = ""
+
+
+class PosterOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    template_id: int | None
+    unit_name: str
+    contact_phone: str
+    title: str
+    activity_date: str
+    location: str
+    bg_color: str
+    contact: str
+    qrcode_text: str
+    status: str
+    pushed_at: datetime | None
+    created_at: datetime
 
 
 # ---------- Feedback ----------

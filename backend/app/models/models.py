@@ -100,6 +100,7 @@ class GroupApplication(Base):
     unit_address: Mapped[str] = mapped_column(String(255), default="")
     contact_name: Mapped[str] = mapped_column(String(50))
     contact_phone: Mapped[str] = mapped_column(String(20), index=True)
+    unit_type: Mapped[str] = mapped_column(String(20), default="其他")  # 学校/政府/军队/企业/其他
     expected_count: Mapped[int] = mapped_column(Integer, default=0)
     expected_date: Mapped[str] = mapped_column(String(20), default="")
     status: Mapped[str] = mapped_column(String(20), default="待受理")
@@ -108,6 +109,71 @@ class GroupApplication(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=now_utc, onupdate=now_utc
     )
+
+
+class GroupActivity(Base):
+    """团体献血活动（由工作人员为团体单位创建，生成业务流程号）。"""
+
+    __tablename__ = "group_activities"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    flow_no: Mapped[str] = mapped_column(String(40), unique=True, index=True)
+    application_id: Mapped[int | None] = mapped_column(
+        ForeignKey("group_applications.id"), nullable=True
+    )
+    unit_name: Mapped[str] = mapped_column(String(100))
+    unit_type: Mapped[str] = mapped_column(String(20), default="其他")
+    contact_name: Mapped[str] = mapped_column(String(50), default="")
+    contact_phone: Mapped[str] = mapped_column(String(20), index=True, default="")
+    center_contact: Mapped[str] = mapped_column(String(50), default="")  # 血液中心负责人
+    activity_date: Mapped[str] = mapped_column(String(20), default="")
+    actual_date: Mapped[str] = mapped_column(String(20), default="")  # 实际献血时间
+    location: Mapped[str] = mapped_column(String(100), default="")
+    expected_count: Mapped[int] = mapped_column(Integer, default=0)
+    actual_count: Mapped[int] = mapped_column(Integer, default=0)
+    year: Mapped[int] = mapped_column(Integer, default=0, index=True)
+    poster_id: Mapped[int | None] = mapped_column(
+        ForeignKey("posters.id"), nullable=True
+    )
+    remark: Mapped[str] = mapped_column(String(255), default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class PosterTemplate(Base):
+    """宣传海报模板。"""
+
+    __tablename__ = "poster_templates"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(100))
+    bg_color: Mapped[str] = mapped_column(String(20), default="#c62828")
+    title_style: Mapped[str] = mapped_column(String(50), default="default")
+    contact: Mapped[str] = mapped_column(String(100), default="")
+    qrcode_text: Mapped[str] = mapped_column(String(255), default="")
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class Poster(Base):
+    """团体宣传海报（基于模板生成）。"""
+
+    __tablename__ = "posters"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    template_id: Mapped[int | None] = mapped_column(
+        ForeignKey("poster_templates.id"), nullable=True
+    )
+    unit_name: Mapped[str] = mapped_column(String(100))
+    contact_phone: Mapped[str] = mapped_column(String(20), index=True, default="")
+    title: Mapped[str] = mapped_column(String(100), default="无偿献血，从我做起")
+    activity_date: Mapped[str] = mapped_column(String(20), default="")
+    location: Mapped[str] = mapped_column(String(100), default="")
+    bg_color: Mapped[str] = mapped_column(String(20), default="#c62828")
+    contact: Mapped[str] = mapped_column(String(100), default="")
+    qrcode_text: Mapped[str] = mapped_column(String(255), default="")
+    status: Mapped[str] = mapped_column(String(20), default="草稿")  # 草稿/已推送
+    pushed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
 
 
 class Feedback(Base):

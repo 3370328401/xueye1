@@ -4,6 +4,7 @@
     <el-card>
       <el-table :data="list" v-loading="loading" stripe>
         <el-table-column prop="unit_name" label="单位名称" />
+        <el-table-column prop="unit_type" label="单位类型" width="90" />
         <el-table-column prop="contact_name" label="联系人" width="90" />
         <el-table-column prop="contact_phone" label="手机号" width="130" />
         <el-table-column prop="expected_count" label="预计人数" width="90" />

@@ -27,9 +27,11 @@ from app.models import (
     DonorInfo,
     Evaluation,
     Feedback,
+    GroupActivity,
     GroupApplication,
     HealthSurvey,
     Location,
+    PosterTemplate,
     User,
 )
 from app.routers.appointment import gen_code
@@ -251,6 +253,7 @@ def seed_groups(db: Session):
                 unit_address="创新大厦 10 层",
                 contact_name="孙经理",
                 contact_phone="13700000001",
+                unit_type="企业",
                 expected_count=50,
                 expected_date=(date.today() + timedelta(days=7)).isoformat(),
                 status="待受理",
@@ -261,10 +264,71 @@ def seed_groups(db: Session):
                 unit_address="文化路 5 号",
                 contact_name="周老师",
                 contact_phone="13700000002",
+                unit_type="学校",
                 expected_count=120,
                 expected_date=(date.today() + timedelta(days=14)).isoformat(),
                 status="受理中",
                 admin_remark="已联系，安排流动采血车",
+            ),
+        ]
+    )
+    db.commit()
+
+
+def seed_poster_templates(db: Session):
+    if db.query(PosterTemplate).count() > 0:
+        return
+    db.add_all(
+        [
+            PosterTemplate(
+                name="红色热血模板",
+                bg_color="#c62828",
+                contact="海南省血液中心 0898-12345678",
+                qrcode_text="扫码预约献血",
+            ),
+            PosterTemplate(
+                name="温馨藍调模板",
+                bg_color="#1565c0",
+                contact="海南省血液中心 0898-12345678",
+                qrcode_text="扫码预约献血",
+            ),
+        ]
+    )
+    db.commit()
+
+
+def seed_group_activities(db: Session):
+    if db.query(GroupActivity).count() > 0:
+        return
+    this_year = date.today().year
+    db.add_all(
+        [
+            GroupActivity(
+                flow_no=f"TT{this_year}0001",
+                unit_name="蓝天科技有限公司",
+                unit_type="企业",
+                contact_name="孙经理",
+                contact_phone="13700000001",
+                center_contact="招募科-张干事",
+                activity_date=(date.today() + timedelta(days=7)).isoformat(),
+                location="市中心血站",
+                expected_count=50,
+                actual_count=42,
+                year=this_year,
+            ),
+            GroupActivity(
+                flow_no=f"TT{this_year - 1}0007",
+                unit_name="实验中学",
+                unit_type="学校",
+                contact_name="周老师",
+                contact_phone="13700000002",
+                center_contact="招募科-张干事",
+                activity_date=f"{this_year - 1}-10-15",
+                actual_date=f"{this_year - 1}-10-15",
+                location="大学城流动采血车",
+                expected_count=120,
+                actual_count=98,
+                year=this_year - 1,
             ),
         ]
     )
@@ -281,6 +345,8 @@ def run():
         seed_locations(db)
         seed_demo_users(db)
         seed_groups(db)
+        seed_poster_templates(db)
+        seed_group_activities(db)
         print("演示数据初始化完成。")
         print(f"管理员账号: {settings.admin_phone} / {settings.admin_password}")
         print("工作人员: recruiter / 123456 (招募科) , collector / 123456 (体采科)")

@@ -18,14 +18,17 @@ from app.routers import (
     feedback,
     group,
     health,
+    poster,
     stats,
 )
 from app.seed import (
     ensure_admin,
     seed_demo_users,
     seed_dicts,
+    seed_group_activities,
     seed_groups,
     seed_locations,
+    seed_poster_templates,
     seed_staff,
 )
 
@@ -41,6 +44,8 @@ async def lifespan(app: FastAPI):
         seed_locations(db)
         seed_demo_users(db)
         seed_groups(db)
+        seed_poster_templates(db)
+        seed_group_activities(db)
     finally:
         db.close()
     yield
@@ -70,6 +75,7 @@ app.include_router(external.router, prefix=api)
 app.include_router(dict_router.router, prefix=api)
 app.include_router(audit.router, prefix=api)
 app.include_router(double_form.router, prefix=api)
+app.include_router(poster.router, prefix=api)
 
 
 @app.get("/")
