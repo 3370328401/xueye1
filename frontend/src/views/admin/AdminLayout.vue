@@ -13,6 +13,7 @@
         <el-menu-item index="/admin/feedbacks"><el-icon><Warning /></el-icon>异常反馈管理</el-menu-item>
         <el-menu-item index="/admin/evaluations"><el-icon><Star /></el-icon>献血评价管理</el-menu-item>
         <el-menu-item index="/admin/exchanges"><el-icon><Present /></el-icon>积分兑换管理</el-menu-item>
+        <el-menu-item index="/admin/messages"><el-icon><Bell /></el-icon>消息推送管理</el-menu-item>
         <el-menu-item index="/admin/external"><el-icon><Connection /></el-icon>外部接口演示</el-menu-item>
       </el-menu>
     </el-aside>

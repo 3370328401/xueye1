@@ -16,6 +16,8 @@ from app.models.models import (
     PosterTemplate,
     Location,
     DonorInfo,
+    Message,
+    MessageRead,
     PointRecord,
     SignRecord,
     StaffShift,
@@ -44,4 +46,6 @@ __all__ = [
     "PointRecord",
     "Gift",
     "Exchange",
+    "Message",
+    "MessageRead",
 ]

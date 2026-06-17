@@ -378,3 +378,30 @@ class SignRecord(Base):
     content: Mapped[str] = mapped_column(Text, default="")  # 表单内容快照(JSON)
     signed_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
     verified: Mapped[bool] = mapped_column(Boolean, default=False)  # 现场审验
+
+
+class Message(Base):
+    """消息推送（普发/定向）。"""
+
+    __tablename__ = "messages"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(150))
+    content: Mapped[str] = mapped_column(Text, default="")
+    msg_type: Mapped[str] = mapped_column(String(30), default="系统通知")
+    scope: Mapped[str] = mapped_column(String(10), default="普发")  # 普发/定向
+    target: Mapped[str] = mapped_column(Text, default="{}")  # JSON: 定向筛选条件
+    status: Mapped[str] = mapped_column(String(10), default="草稿")  # 草稿/已发布/已撤回
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
+class MessageRead(Base):
+    """消息阅读记录。"""
+
+    __tablename__ = "message_reads"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    message_id: Mapped[int] = mapped_column(ForeignKey("messages.id"), index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    read_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)

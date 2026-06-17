@@ -497,6 +497,64 @@ class QueueItemOut(BaseModel):
     ahead: int
 
 
+# ---------- 消息推送 ----------
+class MessageIn(BaseModel):
+    title: str
+    content: str = ""
+    msg_type: str = "系统通知"
+    scope: str = "普发"
+    target: dict = {}
+
+
+class MessageOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    title: str
+    content: str
+    msg_type: str
+    scope: str
+    target: str
+    status: str
+    created_at: datetime
+    published_at: datetime | None = None
+
+
+class AdminMessageOut(MessageOut):
+    read_count: int = 0
+
+
+class UserMessageOut(MessageOut):
+    is_read: bool = False
+
+
+# ---------- 个人信息查询（嵌入，mock） ----------
+class BloodTestOut(BaseModel):
+    seq: int
+    test_date: str
+    result: str
+    detail: str = ""
+
+
+class DonationTraceOut(BaseModel):
+    seq: int
+    donate_date: str
+    location: str
+    volume_ml: int
+    blood_type: str
+    identity: str
+
+
+class PersonalInfoOut(BaseModel):
+    e_cert_no: str
+    total_volume_ml: int
+    donate_count: int
+    points_balance: int
+    blood_usage: list[dict]
+    tests: list[BloodTestOut]
+    traces: list[DonationTraceOut]
+
+
 # ---------- Location ----------
 class LocationOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)

@@ -80,6 +80,19 @@ EXCHANGE_STATUSES = ["待处理", "处理中", "已兑换", "已取消"]
 # ---------- 现场采血/叫号相关状态 ----------
 QUEUE_STATUSES = [APPT_WAIT_COLLECT, APPT_COLLECTING]
 
+# ---------- 消息推送 ----------
+MESSAGE_TYPES = [
+    "国家政策",
+    "地方政策",
+    "科普知识",
+    "活动通知",
+    "预约提醒",
+    "健康指导",
+    "系统通知",
+]
+MESSAGE_SCOPES = ["普发", "定向"]
+MESSAGE_STATUSES = ["草稿", "已发布", "已撤回"]
+
 # ---------- 字典分类（选项字典） ----------
 DICT_DEFAULTS = {
     "gender": ["男", "女"],

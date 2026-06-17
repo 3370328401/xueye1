@@ -29,6 +29,7 @@ from app.models import (
     Evaluation,
     Feedback,
     Gift,
+    Message,
     GroupActivity,
     GroupApplication,
     HealthSurvey,
@@ -374,6 +375,40 @@ def seed_gifts(db: Session):
     db.commit()
 
 
+def seed_messages(db: Session):
+    if db.query(Message).count() > 0:
+        return
+    now = datetime.now()
+    db.add_all(
+        [
+            Message(
+                title="【国家政策】无偿献血法宣传",
+                content="献血是无偿的、高尚的行为。鼓励适龄健康公民积极参与无偿献血。",
+                msg_type="国家政策",
+                scope="普发",
+                status="已发布",
+                published_at=now,
+            ),
+            Message(
+                title="【科普知识】献血前后注意事项",
+                content="献血前请保证充足睡眠，饱餐但勿过量；献血后按压针眼 10 分钟，多饱饮水。",
+                msg_type="科普知识",
+                scope="普发",
+                status="已发布",
+                published_at=now,
+            ),
+            Message(
+                title="【活动通知】本周末献血屋开放",
+                content="高新区献血屋本周六日 9:00-18:00 正常开放，欢迎前来献血。",
+                msg_type="活动通知",
+                scope="普发",
+                status="草稿",
+            ),
+        ]
+    )
+    db.commit()
+
+
 def run():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
@@ -388,6 +423,7 @@ def run():
         seed_group_activities(db)
         seed_eval_templates(db)
         seed_gifts(db)
+        seed_messages(db)
         print("演示数据初始化完成。")
         print(f"管理员账号: {settings.admin_phone} / {settings.admin_password}")
         print("工作人员: recruiter / 123456 (招募科) , collector / 123456 (体采科)")

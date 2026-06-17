@@ -34,6 +34,8 @@ const routes = [
       { path: 'feedback', name: 'user-feedback', component: () => import('../views/user/Feedback.vue') },
       { path: 'evaluation', name: 'user-evaluation', component: () => import('../views/user/Evaluation.vue') },
       { path: 'points', name: 'user-points', component: () => import('../views/user/Points.vue') },
+      { path: 'messages', name: 'user-messages', component: () => import('../views/user/Messages.vue') },
+      { path: 'personal', name: 'user-personal', component: () => import('../views/user/PersonalInfo.vue') },
     ],
   },
   {
@@ -57,6 +59,7 @@ const routes = [
       { path: 'feedbacks', name: 'admin-feedbacks', component: () => import('../views/admin/FeedbackManage.vue') },
       { path: 'evaluations', name: 'admin-evaluations', component: () => import('../views/admin/EvaluationManage.vue') },
       { path: 'exchanges', name: 'admin-exchanges', component: () => import('../views/admin/ExchangeManage.vue') },
+      { path: 'messages', name: 'admin-messages', component: () => import('../views/admin/MessageManage.vue') },
       { path: 'external', name: 'admin-external', component: () => import('../views/admin/ExternalDemo.vue') },
     ],
   },
