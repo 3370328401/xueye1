@@ -15,6 +15,11 @@ const routes = [
     component: () => import('../views/group/GroupQuery.vue'),
   },
   {
+    path: '/queue',
+    name: 'queue',
+    component: () => import('../views/QueueDisplay.vue'),
+  },
+  {
     path: '/user',
     component: () => import('../views/user/UserLayout.vue'),
     meta: { requiresAuth: true, role: 'user' },
@@ -28,6 +33,7 @@ const routes = [
       { path: 'double-form', name: 'user-double-form', component: () => import('../views/user/DoubleForm.vue') },
       { path: 'feedback', name: 'user-feedback', component: () => import('../views/user/Feedback.vue') },
       { path: 'evaluation', name: 'user-evaluation', component: () => import('../views/user/Evaluation.vue') },
+      { path: 'points', name: 'user-points', component: () => import('../views/user/Points.vue') },
     ],
   },
   {
@@ -50,6 +56,7 @@ const routes = [
       { path: 'schedules', name: 'admin-schedules', component: () => import('../views/admin/ScheduleManage.vue') },
       { path: 'feedbacks', name: 'admin-feedbacks', component: () => import('../views/admin/FeedbackManage.vue') },
       { path: 'evaluations', name: 'admin-evaluations', component: () => import('../views/admin/EvaluationManage.vue') },
+      { path: 'exchanges', name: 'admin-exchanges', component: () => import('../views/admin/ExchangeManage.vue') },
       { path: 'external', name: 'admin-external', component: () => import('../views/admin/ExternalDemo.vue') },
     ],
   },

@@ -25,8 +25,10 @@ from app.models import (
     Appointment,
     Dictionary,
     DonorInfo,
+    EvalTemplate,
     Evaluation,
     Feedback,
+    Gift,
     GroupActivity,
     GroupApplication,
     HealthSurvey,
@@ -335,6 +337,43 @@ def seed_group_activities(db: Session):
     db.commit()
 
 
+def seed_eval_templates(db: Session):
+    if db.query(EvalTemplate).count() > 0:
+        return
+    indicators = '["采血环境", "工作人员态度", "等待时间", "业务技能", "注意事项讲解", "小礼品满意度"]'
+    db.add_all(
+        [
+            EvalTemplate(
+                name="全血献血评价表",
+                blood_type="全血",
+                indicators=indicators,
+                reward_points=20,
+            ),
+            EvalTemplate(
+                name="成分血献血评价表",
+                blood_type="成分血",
+                indicators=indicators,
+                reward_points=30,
+            ),
+        ]
+    )
+    db.commit()
+
+
+def seed_gifts(db: Session):
+    if db.query(Gift).count() > 0:
+        return
+    db.add_all(
+        [
+            Gift(name="无偿献血纪念徽章", points_cost=50, stock=100, description="限量纪念徽章"),
+            Gift(name="保温杯", points_cost=120, stock=50, description="献血者专属保温杯"),
+            Gift(name="急救包", points_cost=200, stock=30, description="家庭应急急救包"),
+            Gift(name="超市购物卡(50元)", points_cost=500, stock=20, description="通用购物卡"),
+        ]
+    )
+    db.commit()
+
+
 def run():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
@@ -347,6 +386,8 @@ def run():
         seed_groups(db)
         seed_poster_templates(db)
         seed_group_activities(db)
+        seed_eval_templates(db)
+        seed_gifts(db)
         print("演示数据初始化完成。")
         print(f"管理员账号: {settings.admin_phone} / {settings.admin_password}")
         print("工作人员: recruiter / 123456 (招募科) , collector / 123456 (体采科)")

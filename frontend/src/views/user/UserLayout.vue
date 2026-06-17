@@ -18,6 +18,7 @@
           <el-menu-item index="/user/double-form"><el-icon><EditPen /></el-icon>双表签署</el-menu-item>
           <el-menu-item index="/user/feedback"><el-icon><Warning /></el-icon>身体异常反馈</el-menu-item>
           <el-menu-item index="/user/evaluation"><el-icon><Star /></el-icon>献血过程评价</el-menu-item>
+          <el-menu-item index="/user/points"><el-icon><Present /></el-icon>积分与兑换</el-menu-item>
         </el-menu>
       </el-aside>
       <el-main>

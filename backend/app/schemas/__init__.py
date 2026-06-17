@@ -405,6 +405,98 @@ class AdminEvaluationOut(EvaluationOut):
     appointment_code: str = ""
 
 
+# ---------- 评价模板 ----------
+class EvalTemplateIn(BaseModel):
+    name: str
+    blood_type: str = "全血"
+    indicators: list[str] = []
+    reward_points: int = 20
+    is_active: bool = True
+
+
+class EvalTemplateOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    blood_type: str
+    indicators: str
+    reward_points: int
+    is_active: bool
+    created_at: datetime
+
+
+# ---------- 积分 / 兑换 ----------
+class PointRecordOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    change: int
+    balance_after: int
+    reason: str
+    ref: str
+    created_at: datetime
+
+
+class PointSummaryOut(BaseModel):
+    balance: int
+    records: list[PointRecordOut]
+
+
+class GiftIn(BaseModel):
+    name: str
+    points_cost: int = 0
+    stock: int = 0
+    description: str = ""
+    is_active: bool = True
+
+
+class GiftOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    points_cost: int
+    stock: int
+    description: str
+    is_active: bool
+
+
+class ExchangeIn(BaseModel):
+    gift_id: int
+
+
+class ExchangeStatusIn(BaseModel):
+    status: str
+
+
+class ExchangeOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    user_id: int
+    gift_id: int
+    gift_name: str
+    points_cost: int
+    status: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class AdminExchangeOut(ExchangeOut):
+    user_name: str = ""
+    user_phone: str = ""
+
+
+# ---------- 叫号显示 ----------
+class QueueItemOut(BaseModel):
+    code: str
+    name: str
+    blood_type: str
+    status: str
+    ahead: int
+
+
 # ---------- Location ----------
 class LocationOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)

@@ -25,9 +25,28 @@
           <el-button class="quick" @click="$router.push('/user/profile')">完善个人信息</el-button>
           <el-button class="quick" @click="$router.push('/user/double-form')">双表填写与签署</el-button>
           <el-button class="quick" @click="$router.push('/user/appointments')">查看我的预约</el-button>
+          <el-button class="quick" @click="$router.push('/user/points')">积分与兑换</el-button>
+          <el-button class="quick" @click="$router.push('/queue')">现场叫号显示</el-button>
         </el-card>
       </el-col>
     </el-row>
+
+    <el-card v-if="reminders.length" class="card-gap reminder">
+      <template #header>预约提醒</template>
+      <el-alert
+        v-for="r in reminders"
+        :key="r.id"
+        :closable="false"
+        type="warning"
+        class="reminder-item"
+      >
+        <div>
+          {{ r.appoint_date }} {{ r.time_slot }} · {{ r.location }}（{{ r.blood_type }}）
+          —— 当前状态：<strong>{{ r.status }}</strong>
+          <span v-if="r.status === '待填双表及签字确认'">，请尽快前往「双表签署」完成。</span>
+        </div>
+      </el-alert>
+    </el-card>
   </div>
 </template>
 
@@ -39,12 +58,14 @@ import api from '../../api'
 const auth = useAuthStore()
 const phone = ref('')
 const latest = ref(null)
+const reminders = ref([])
 
 onMounted(async () => {
   const me = await api.get('/auth/me')
   phone.value = me.phone
   const appts = await api.get('/appointments/mine')
   if (appts.length) latest.value = appts[0]
+  reminders.value = await api.get('/reminders/mine')
 })
 </script>
 
@@ -53,5 +74,8 @@ onMounted(async () => {
   display: block;
   width: 100%;
   margin: 0 0 12px;
+}
+.reminder-item {
+  margin-bottom: 8px;
 }
 </style>

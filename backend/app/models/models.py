@@ -254,6 +254,65 @@ class Evaluation(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
 
 
+class EvalTemplate(Base):
+    """献血过程评价模板（按献血类型）。"""
+
+    __tablename__ = "eval_templates"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(100))
+    blood_type: Mapped[str] = mapped_column(String(20), default="全血")  # 全血/成分血
+    indicators: Mapped[str] = mapped_column(Text, default="[]")  # JSON: 评价指标列表
+    reward_points: Mapped[int] = mapped_column(Integer, default=20)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class PointRecord(Base):
+    """积分变动流水（正为获得，负为消耗）。"""
+
+    __tablename__ = "point_records"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    change: Mapped[int] = mapped_column(Integer, default=0)
+    balance_after: Mapped[int] = mapped_column(Integer, default=0)
+    reason: Mapped[str] = mapped_column(String(100), default="")
+    ref: Mapped[str] = mapped_column(String(50), default="")  # 关联业务标识
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class Gift(Base):
+    """可兑换礼品。"""
+
+    __tablename__ = "gifts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(100))
+    points_cost: Mapped[int] = mapped_column(Integer, default=0)
+    stock: Mapped[int] = mapped_column(Integer, default=0)
+    description: Mapped[str] = mapped_column(String(255), default="")
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class Exchange(Base):
+    """礼品兑换记录。"""
+
+    __tablename__ = "exchanges"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    gift_id: Mapped[int] = mapped_column(ForeignKey("gifts.id"))
+    gift_name: Mapped[str] = mapped_column(String(100), default="")
+    points_cost: Mapped[int] = mapped_column(Integer, default=0)
+    status: Mapped[str] = mapped_column(String(20), default="待处理")  # 待处理/处理中/已兑换/已取消
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=now_utc, onupdate=now_utc
+    )
+
+
 class Location(Base):
     __tablename__ = "locations"
 

@@ -12,6 +12,7 @@
         <el-menu-item index="/admin/schedules"><el-icon><Clock /></el-icon>排班计划管理</el-menu-item>
         <el-menu-item index="/admin/feedbacks"><el-icon><Warning /></el-icon>异常反馈管理</el-menu-item>
         <el-menu-item index="/admin/evaluations"><el-icon><Star /></el-icon>献血评价管理</el-menu-item>
+        <el-menu-item index="/admin/exchanges"><el-icon><Present /></el-icon>积分兑换管理</el-menu-item>
         <el-menu-item index="/admin/external"><el-icon><Connection /></el-icon>外部接口演示</el-menu-item>
       </el-menu>
     </el-aside>
