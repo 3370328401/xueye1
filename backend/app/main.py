@@ -23,8 +23,10 @@ from app.routers import (
     points,
     poster,
     queue,
+    reports,
     schedule,
     stats,
+    system,
 )
 from app.seed import (
     ensure_admin,
@@ -36,8 +38,10 @@ from app.seed import (
     seed_eval_templates,
     seed_gifts,
     seed_messages,
+    seed_orgs,
     seed_poster_templates,
     seed_staff,
+    seed_sys_params,
 )
 
 
@@ -57,6 +61,8 @@ async def lifespan(app: FastAPI):
         seed_eval_templates(db)
         seed_gifts(db)
         seed_messages(db)
+        seed_orgs(db)
+        seed_sys_params(db)
     finally:
         db.close()
     yield
@@ -92,6 +98,8 @@ app.include_router(points.router, prefix=api)
 app.include_router(queue.router, prefix=api)
 app.include_router(message.router, prefix=api)
 app.include_router(personal.router, prefix=api)
+app.include_router(system.router, prefix=api)
+app.include_router(reports.router, prefix=api)
 
 
 @app.get("/")

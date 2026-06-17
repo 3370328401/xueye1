@@ -14,6 +14,8 @@
         <el-menu-item index="/admin/evaluations"><el-icon><Star /></el-icon>献血评价管理</el-menu-item>
         <el-menu-item index="/admin/exchanges"><el-icon><Present /></el-icon>积分兑换管理</el-menu-item>
         <el-menu-item index="/admin/messages"><el-icon><Bell /></el-icon>消息推送管理</el-menu-item>
+        <el-menu-item index="/admin/reports"><el-icon><Histogram /></el-icon>统计报表导出</el-menu-item>
+        <el-menu-item v-if="isAdmin" index="/admin/system"><el-icon><Setting /></el-icon>系统管理</el-menu-item>
         <el-menu-item index="/admin/external"><el-icon><Connection /></el-icon>外部接口演示</el-menu-item>
       </el-menu>
     </el-aside>
@@ -40,6 +42,7 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const active = computed(() => route.path)
+const isAdmin = computed(() => auth.role === 'admin')
 
 async function logout() {
   try {

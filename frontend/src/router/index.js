@@ -60,6 +60,8 @@ const routes = [
       { path: 'evaluations', name: 'admin-evaluations', component: () => import('../views/admin/EvaluationManage.vue') },
       { path: 'exchanges', name: 'admin-exchanges', component: () => import('../views/admin/ExchangeManage.vue') },
       { path: 'messages', name: 'admin-messages', component: () => import('../views/admin/MessageManage.vue') },
+      { path: 'reports', name: 'admin-reports', component: () => import('../views/admin/Reports.vue') },
+      { path: 'system', name: 'admin-system', component: () => import('../views/admin/SystemManage.vue') },
       { path: 'external', name: 'admin-external', component: () => import('../views/admin/ExternalDemo.vue') },
     ],
   },

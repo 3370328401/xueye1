@@ -405,3 +405,34 @@ class MessageRead(Base):
     message_id: Mapped[int] = mapped_column(ForeignKey("messages.id"), index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     read_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class Organization(Base):
+    """组织机构。"""
+
+    __tablename__ = "organizations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(100))
+    code: Mapped[str] = mapped_column(String(50), default="")
+    org_type: Mapped[str] = mapped_column(String(30), default="科室")  # 中心/科室/采血点
+    parent_id: Mapped[int | None] = mapped_column(
+        ForeignKey("organizations.id"), nullable=True
+    )
+    leader: Mapped[str] = mapped_column(String(50), default="")
+    phone: Mapped[str] = mapped_column(String(20), default="")
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    remark: Mapped[str] = mapped_column(String(255), default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class SysParam(Base):
+    """系统参数配置。"""
+
+    __tablename__ = "sys_params"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    key: Mapped[str] = mapped_column(String(60), unique=True, index=True)
+    value: Mapped[str] = mapped_column(String(255), default="")
+    label: Mapped[str] = mapped_column(String(100), default="")
+    remark: Mapped[str] = mapped_column(String(255), default="")

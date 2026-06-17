@@ -18,7 +18,9 @@ from app.models.models import (
     DonorInfo,
     Message,
     MessageRead,
+    Organization,
     PointRecord,
+    SysParam,
     SignRecord,
     StaffShift,
     User,
@@ -48,4 +50,6 @@ __all__ = [
     "Exchange",
     "Message",
     "MessageRead",
+    "Organization",
+    "SysParam",
 ]

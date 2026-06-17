@@ -14,6 +14,7 @@ from app.core.constants import (
     APPT_FORM_DONE,
     APPT_PENDING_FORM,
     DICT_DEFAULTS,
+    SYS_PARAM_DEFAULTS,
     ROLE_ADMIN,
     ROLE_COLLECTOR,
     ROLE_RECRUITER,
@@ -30,6 +31,8 @@ from app.models import (
     Feedback,
     Gift,
     Message,
+    Organization,
+    SysParam,
     GroupActivity,
     GroupApplication,
     HealthSurvey,
@@ -409,6 +412,34 @@ def seed_messages(db: Session):
     db.commit()
 
 
+def seed_orgs(db: Session):
+    if db.query(Organization).count() > 0:
+        return
+    center = Organization(
+        name="海南省血液中心", code="HNXZ", org_type="中心", leader="中心主任", phone="0898-66666666"
+    )
+    db.add(center)
+    db.commit()
+    db.refresh(center)
+    db.add_all(
+        [
+            Organization(name="招募科", code="ZMK", org_type="科室", parent_id=center.id, leader="张主任"),
+            Organization(name="体采科", code="TCK", org_type="科室", parent_id=center.id, leader="李主任"),
+            Organization(name="市中心血站", code="D001", org_type="采血点", parent_id=center.id),
+            Organization(name="高新区献血屋", code="D002", org_type="采血点", parent_id=center.id),
+        ]
+    )
+    db.commit()
+
+
+def seed_sys_params(db: Session):
+    if db.query(SysParam).count() > 0:
+        return
+    for key, value, label, remark in SYS_PARAM_DEFAULTS:
+        db.add(SysParam(key=key, value=value, label=label, remark=remark))
+    db.commit()
+
+
 def run():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
@@ -424,6 +455,8 @@ def run():
         seed_eval_templates(db)
         seed_gifts(db)
         seed_messages(db)
+        seed_orgs(db)
+        seed_sys_params(db)
         print("演示数据初始化完成。")
         print(f"管理员账号: {settings.admin_phone} / {settings.admin_password}")
         print("工作人员: recruiter / 123456 (招募科) , collector / 123456 (体采科)")

@@ -555,6 +555,87 @@ class PersonalInfoOut(BaseModel):
     traces: list[DonationTraceOut]
 
 
+# ---------- 系统管理：组织机构 ----------
+class OrgIn(BaseModel):
+    name: str
+    code: str = ""
+    org_type: str = "科室"
+    parent_id: int | None = None
+    leader: str = ""
+    phone: str = ""
+    is_active: bool = True
+    remark: str = ""
+
+
+class OrgOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    code: str
+    org_type: str
+    parent_id: int | None
+    leader: str
+    phone: str
+    is_active: bool
+    remark: str
+
+
+# ---------- 系统管理：用户管理 ----------
+class StaffIn(BaseModel):
+    name: str
+    phone: str
+    password: str = "123456"
+    role: str
+    dept: str = ""
+
+
+class StaffUpdateIn(BaseModel):
+    name: str
+    role: str
+    dept: str = ""
+    is_active: bool = True
+
+
+class StaffOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    phone: str
+    role: str
+    role_label: str = ""
+    dept: str
+    is_active: bool
+    created_at: datetime
+
+
+class PasswordResetIn(BaseModel):
+    password: str = "123456"
+
+
+# ---------- 系统管理：角色权限 ----------
+class RoleOut(BaseModel):
+    role: str
+    label: str
+    permissions: list[str]
+
+
+# ---------- 系统管理：系统参数 ----------
+class SysParamIn(BaseModel):
+    value: str
+
+
+class SysParamOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    key: str
+    value: str
+    label: str
+    remark: str
+
+
 # ---------- Location ----------
 class LocationOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
