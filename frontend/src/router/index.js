@@ -47,6 +47,7 @@ const routes = [
       { path: 'groups', name: 'admin-groups', component: () => import('../views/admin/GroupManage.vue') },
       { path: 'group-activities', name: 'admin-group-activities', component: () => import('../views/admin/GroupActivityManage.vue') },
       { path: 'posters', name: 'admin-posters', component: () => import('../views/admin/PosterManage.vue') },
+      { path: 'schedules', name: 'admin-schedules', component: () => import('../views/admin/ScheduleManage.vue') },
       { path: 'feedbacks', name: 'admin-feedbacks', component: () => import('../views/admin/FeedbackManage.vue') },
       { path: 'evaluations', name: 'admin-evaluations', component: () => import('../views/admin/EvaluationManage.vue') },
       { path: 'external', name: 'admin-external', component: () => import('../views/admin/ExternalDemo.vue') },

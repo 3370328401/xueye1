@@ -1,6 +1,7 @@
 from app.models.models import (
     Appointment,
     AuditLog,
+    BloodPlan,
     Dictionary,
     Evaluation,
     ExternalLog,
@@ -13,6 +14,7 @@ from app.models.models import (
     Location,
     DonorInfo,
     SignRecord,
+    StaffShift,
     User,
 )
 
@@ -32,4 +34,6 @@ __all__ = [
     "AuditLog",
     "Dictionary",
     "SignRecord",
+    "BloodPlan",
+    "StaffShift",
 ]

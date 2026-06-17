@@ -176,6 +176,49 @@ class Poster(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
 
 
+class BloodPlan(Base):
+    """团体献血计划（周/月计划，由团体活动自动生成）。"""
+
+    __tablename__ = "blood_plans"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    plan_type: Mapped[str] = mapped_column(String(10), default="周")  # 周/月
+    activity_id: Mapped[int | None] = mapped_column(
+        ForeignKey("group_activities.id"), nullable=True
+    )
+    plan_date: Mapped[str] = mapped_column(String(20), default="")
+    weekday: Mapped[str] = mapped_column(String(10), default="")
+    location: Mapped[str] = mapped_column(String(100), default="")
+    unit_name: Mapped[str] = mapped_column(String(100), default="")
+    contact_phone: Mapped[str] = mapped_column(String(20), index=True, default="")
+    expected_count: Mapped[int] = mapped_column(Integer, default=0)
+    arrive_time: Mapped[str] = mapped_column(String(20), default="")
+    status: Mapped[str] = mapped_column(String(20), default="草稿")  # 草稿/已确认/已发布
+    remark: Mapped[str] = mapped_column(String(255), default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
+class StaffShift(Base):
+    """体采人员排班表。"""
+
+    __tablename__ = "staff_shifts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    shift: Mapped[str] = mapped_column(String(20), default="全天")  # 上午/下午/全天
+    shift_date: Mapped[str] = mapped_column(String(20), default="")
+    weekday: Mapped[str] = mapped_column(String(10), default="")
+    location: Mapped[str] = mapped_column(String(100), default="")
+    expected_count: Mapped[int] = mapped_column(Integer, default=0)
+    staff_names: Mapped[str] = mapped_column(String(255), default="")
+    start_time: Mapped[str] = mapped_column(String(10), default="08:00")
+    end_time: Mapped[str] = mapped_column(String(10), default="17:00")
+    vehicle: Mapped[str] = mapped_column(String(50), default="")
+    driver: Mapped[str] = mapped_column(String(50), default="")
+    notice: Mapped[str] = mapped_column(String(255), default="")
+    status: Mapped[str] = mapped_column(String(20), default="草稿")  # 草稿/已发布
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=now_utc)
+
+
 class Feedback(Base):
     __tablename__ = "feedbacks"
 

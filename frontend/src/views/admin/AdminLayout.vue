@@ -9,6 +9,7 @@
         <el-menu-item index="/admin/groups"><el-icon><OfficeBuilding /></el-icon>团体申报管理</el-menu-item>
         <el-menu-item index="/admin/group-activities"><el-icon><Tickets /></el-icon>团体活动与统计</el-menu-item>
         <el-menu-item index="/admin/posters"><el-icon><Picture /></el-icon>宣传海报管理</el-menu-item>
+        <el-menu-item index="/admin/schedules"><el-icon><Clock /></el-icon>排班计划管理</el-menu-item>
         <el-menu-item index="/admin/feedbacks"><el-icon><Warning /></el-icon>异常反馈管理</el-menu-item>
         <el-menu-item index="/admin/evaluations"><el-icon><Star /></el-icon>献血评价管理</el-menu-item>
         <el-menu-item index="/admin/external"><el-icon><Connection /></el-icon>外部接口演示</el-menu-item>

@@ -44,6 +44,17 @@
             </el-table>
             <el-empty v-if="!activities.length" description="暂无活动预约" />
           </el-tab-pane>
+          <el-tab-pane label="献血计划" name="plans">
+            <el-table :data="planList" stripe>
+              <el-table-column prop="plan_type" label="类型" width="70" />
+              <el-table-column prop="plan_date" label="日期" width="120" />
+              <el-table-column prop="weekday" label="星期" width="70" />
+              <el-table-column prop="location" label="采血地点" />
+              <el-table-column prop="expected_count" label="预约人数" width="90" />
+              <el-table-column prop="arrive_time" label="到达时间" width="90" />
+            </el-table>
+            <el-empty v-if="!planList.length" description="暂无已发布计划" />
+          </el-tab-pane>
           <el-tab-pane label="宣传海报" name="posters">
             <div v-if="posters.length" class="poster-grid">
               <div v-for="p in posters" :key="p.id" class="poster" :style="{ background: p.bg_color }">
@@ -73,15 +84,17 @@ const tab = ref('apps')
 const list = ref([])
 const activities = ref([])
 const posters = ref([])
+const planList = ref([])
 const searched = ref(false)
 
 async function query() {
   if (!phone.value) return ElMessage.warning('请输入手机号')
   const params = { phone: phone.value }
-  ;[list.value, activities.value, posters.value] = await Promise.all([
+  ;[list.value, activities.value, posters.value, planList.value] = await Promise.all([
     api.get('/group-applications/query', { params }),
     api.get('/group-applications/activities/query', { params }),
     api.get('/posters/query', { params }),
+    api.get('/schedules/blood-plans/query', { params }),
   ])
   searched.value = true
 }

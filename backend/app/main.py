@@ -19,6 +19,7 @@ from app.routers import (
     group,
     health,
     poster,
+    schedule,
     stats,
 )
 from app.seed import (
@@ -76,6 +77,7 @@ app.include_router(dict_router.router, prefix=api)
 app.include_router(audit.router, prefix=api)
 app.include_router(double_form.router, prefix=api)
 app.include_router(poster.router, prefix=api)
+app.include_router(schedule.router, prefix=api)
 
 
 @app.get("/")

@@ -266,6 +266,73 @@ class PosterOut(BaseModel):
     created_at: datetime
 
 
+# ---------- 排班计划 ----------
+class PlanGenerateIn(BaseModel):
+    plan_type: str = "周"
+    start_date: str
+    end_date: str
+
+
+class BloodPlanUpdate(BaseModel):
+    plan_date: str = ""
+    location: str = ""
+    expected_count: int = 0
+    arrive_time: str = ""
+    remark: str = ""
+
+
+class BloodPlanOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    plan_type: str
+    activity_id: int | None
+    plan_date: str
+    weekday: str
+    location: str
+    unit_name: str
+    contact_phone: str
+    expected_count: int
+    arrive_time: str
+    status: str
+    remark: str
+    created_at: datetime
+
+
+class ShiftGenerateIn(BaseModel):
+    start_date: str
+    end_date: str
+
+
+class StaffShiftUpdate(BaseModel):
+    shift: str = ""
+    staff_names: str = ""
+    start_time: str = ""
+    end_time: str = ""
+    vehicle: str = ""
+    driver: str = ""
+    notice: str = ""
+
+
+class StaffShiftOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    shift: str
+    shift_date: str
+    weekday: str
+    location: str
+    expected_count: int
+    staff_names: str
+    start_time: str
+    end_time: str
+    vehicle: str
+    driver: str
+    notice: str
+    status: str
+    created_at: datetime
+
+
 # ---------- Feedback ----------
 class FeedbackIn(BaseModel):
     appointment_id: int
